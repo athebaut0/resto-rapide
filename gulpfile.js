@@ -6,6 +6,7 @@ const del = require('del');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const { argv } = require('yargs');
+const nunjucks = require('gulp-nunjucks-render');
 
 const $ = gulpLoadPlugins();
 const server = browserSync.create();
@@ -15,6 +16,19 @@ const port = argv.port || 9000;
 const isProd = process.env.NODE_ENV === 'production';
 const isTest = process.env.NODE_ENV === 'test';
 const isDev = !isProd && !isTest;
+
+
+const gulp= require('gulp');
+gulp.task('nunjucks', function() {
+	  // Gets .html and .nunjucks files in pages
+	  return gulp.src('app/pages/**/*.+(html|nunjucks)')
+	  // Renders template with nunjucks
+	  .pipe(nunjucksRender({
+	      path: ['app/templates']
+	    }))
+	  // output files in app folder
+	  .pipe(gulp.dest('dist'))
+	});
 
 function styles() {
   return src('app/styles/*.scss')
